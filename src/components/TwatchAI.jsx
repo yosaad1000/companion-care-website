@@ -188,6 +188,7 @@ const TwatchAI = () => {
                           imageUrl={diseaseDetails.imageUrl}
                           tags={diseaseDetails.tags}
                           setShowModel={setShowModel} 
+                          setImages={setImages}
                     />
                 )}
 
