@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { X } from 'lucide-react';
 import Logoloader from './loaders/Logoloader';
 import Card from './Card';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TwatchAI = () => {
     const [dragActive, setDragActive] = useState(false);
@@ -35,19 +37,29 @@ const TwatchAI = () => {
         }
     };
 
+    //  console.log(images);
     const handleDrop = (e) => {
         e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
-        if (images.length === 4) return;
+        if (images.length >= 1) return;
         const files = [...e.dataTransfer.files];
         handleFiles(files);
     };
 
     const handleFiles = (files) => {
         const validFiles = files.filter(file =>
-            file.type === 'image/jpeg' && file.size <= 5 * 1024 * 1024
+            (file.type === 'image/jpeg' || file.type === 'image/jpg') && file.size <= 5 * 1024 * 1024
         );
+
+        if (validFiles.length === 0) {
+            toast.error('Please upload only JPG/JPEG files under 5MB');
+            return;
+        }
+        if (validFiles.length >=2) {
+            toast.error('Please upload only 1 Image');
+            return;
+        }
 
         validFiles.forEach(file => {
             const reader = new FileReader();
@@ -59,6 +71,8 @@ const TwatchAI = () => {
             };
             reader.readAsDataURL(file);
         });
+
+        toast.success('Image uploaded successfully!')
     };
 
     const handleFileInput = (e) => {
@@ -102,13 +116,14 @@ const TwatchAI = () => {
 
     return (
         <div className="min-h-screen bg-blue-50 p-4 flex flex-col items-center overflow-y-auto ml-64">
+             <ToastContainer position="top-right" />
             <div className="min-h-screen max-w-2xl mx-auto text-center">
                 <h1 className="text-4xl font-extrabold mb-2 text-secondary">Twatch.A.I</h1>
                 <h2 className="text-3xl font-bold mb-8 text-black">
                     AI Powered Skin Disease Detection
                 </h2>
 
-                {loading ? (<Logoloader />) : (<></>)}
+                {loading ? (<Logoloader />) : <></>}
 
                 {!loading && !showModel && (
                     <div className=''>
@@ -125,7 +140,7 @@ const TwatchAI = () => {
                             onClick={handleClick}
                         >
                             {images.length > 0 ? (
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
                                     {images.map((image, index) => (
                                         <div key={index} className="relative group">
                                             <img src={image.url} alt={`Upload ${index + 1}`} className="w-full h-32 object-cover rounded-lg" />
@@ -136,7 +151,7 @@ const TwatchAI = () => {
                                             </div>
                                         </div>
                                     ))}
-                                    {images.length <= 3 && (
+                                    {images.length <1 && (
                                         <label htmlFor="file-upload" className='text-secondary hover:cursor-pointer'>
                                             Upload
                                             <input id="file-upload" ref={fileInputRef} type="file" multiple accept="image/jpeg,image/jpg" onChange={handleFileInput} className='hidden' />
