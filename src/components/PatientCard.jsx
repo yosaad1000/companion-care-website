@@ -54,7 +54,7 @@ const PatientCard = ({ patient }) => {
 
       {/* Action Footer - More Compact */}
       <div className="border-t border-purple-800 p-2 bg-purple-800/50">
-        <button className="w-full text-xs text-white hover:text-white font-medium transition-colors duration-200">
+        <button className="w-full text-xs text-white hover:text-white font-medium transition-colors duration-200 cursor-pointer">
           View Details →
         </button>
       </div>

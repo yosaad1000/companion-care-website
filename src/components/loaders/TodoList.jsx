@@ -16,6 +16,7 @@ const TodoList = () => {
     const newTask = { id: Date.now(), text: newTodo.trim(), completed: false };
     localStorage.setItem("todos", JSON.stringify([...todos, newTask]));
     setTodos([...todos, newTask]);
+    setNewTodo('');
   };
 
   const toggleTodo = (id) => {
@@ -66,11 +67,11 @@ const TodoList = () => {
         </button>
       </form>
 
-      <div className="mt-4 max-h-60 overflow-y-auto space-y-2">
+      <div className="mt-4 h-[26vh] overflow-y-auto space-y-2 custom-scrollbar">
         {todos.map((todo) => (
           <div
             key={todo.id}
-            className="flex justify-between items-center p-3 bg-gray-50 rounded-lg shadow-sm"
+            className="flex justify-between items-center p-2 bg-gray-100 rounded-lg shadow-sm"
           >
             <div className="flex items-center gap-3">
               <button

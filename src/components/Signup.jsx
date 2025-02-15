@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link } from 'react-router-dom';
 
 const SignupPage = () => {
@@ -30,6 +32,10 @@ const SignupPage = () => {
         }
         if (!phNo) {
             errorMessages.phNo = 'Phone number is required';
+            formIsValid = false;
+        }
+        if(phNo && phNo.length !== 10){
+            errorMessages.phNo = 'Phone number must be 10 digits';
             formIsValid = false;
         }
         if (!name) {
@@ -64,12 +70,14 @@ const SignupPage = () => {
                 }
               } catch (error) {
                 console.log("Error : ",error.response.data.message);
+                toast.error(error.response.data.message);
               }
         }
     }
 
     return (
         <div className="h-screen bg-gradient-to-br from-purple-900 to-purple-600  flex items-center justify-center">
+            <ToastContainer position="top-right" />
             <div className="w-full max-w-7xl  h-[92vh] flex">
 
                 <div className="flex-1 px-25">
@@ -115,11 +123,16 @@ const SignupPage = () => {
                             <div className="space-y-1 relative">
                                 <label className="block text-xl text-white">Phone Number</label>
                                 <input
-                                    type="text"
-                                    onChange={(e) => { 
-                                        setPhNo(e.target.value);
-                                        setErrors((prev) => ({ ...prev, phNo: '' }));
-                                    }}
+                                     type="tel"
+                                     value={phNo} 
+                                     onChange={(e) => {
+                                         const value = e.target.value;
+                                         if (/^\d{0,10}$/.test(value)) { 
+                                             setPhNo(value); 
+                                             setErrors((prev) => ({ ...prev, phNo: '' }));
+                                         }
+                                     }}
+                                     maxLength="10" 
                                     className={`w-full px-8 py-3 rounded-full bg-purple-700/50 border ${errors.phNo?'border-red-400' :'border-purple-400'} focus:outline-none focus:border-white text-white`}
                                 />
                                 {errors.phNo && (

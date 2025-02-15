@@ -10,15 +10,50 @@ import { useAuth } from "../hooks/useAuth";
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
+const ageGroups = [
+  { id: 1, label: '0-18' ,value:[0,18] },
+  { id: 2, label: '19-40',value:[19,40] },
+  { id: 3, label: '41-60',value:[41,60] },
+  { id: 4, label: '60+' }
+];
+
 const Patients = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {user} = useAuth();
-  const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_BACKEND_URL}/users/get-patients/${user.id}`, fetcher)
-  // console.log(data?.data?.patients);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedGenders, setSelectedGenders] = useState([]);
+  const [selectedAgeGroups, setSelectedAgeGroups] = useState([]);
 
-  if(isLoading) return null
-  
+  const handleGenderChange = (gender) => {
+    setSelectedGenders(prev => 
+      prev.includes(gender)
+        ? prev.filter(g => g !== gender)
+        : [...prev, gender]
+    );
+  };
+
+
+  const handleAgeGroupChange = (ageGroup) => {
+    setSelectedAgeGroups(prev =>
+      prev.includes(ageGroup)
+        ? prev.filter(a => a !== ageGroup)
+        : [...prev, ageGroup]
+    );
+  };
+
+  const handleApplyFilter=()=>{
+     //filter logic can use value key to apply logic for filter
+
+    //  console.log(selectedAgeGroups,selectedGenders);
+
+    
+  }
+
+  const { user } = useAuth();
+  const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_BACKEND_URL}/users/get-patients/${user.id}`, fetcher)
+
+  if (isLoading) return null
+
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -32,7 +67,6 @@ const Patients = () => {
   const handleAddPatient = () => {
     setIsModalOpen(true);
     console.log("Add New Patient button clicked");
-    // Logic for adding a new patient (modal or form navigation)
   };
 
   const handlePatientCardClick = (patient) => {
@@ -41,40 +75,111 @@ const Patients = () => {
 
   return (
     <div className="p-6 ml-64">
-      <ToastContainer position="top-right"/>
-      <div className="flex justify-between items-center mb-6">
-        <div className="relative flex items-center w-full mr-4">
-          <input
-            type="text"
-            placeholder="Search patients..."
-            value={searchQuery}
-            onChange={handleSearch}
-            className="w-full pl-10 pr-20 py-2 border border-gray-700 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <SlidersHorizontal className="absolute right-10 text-gray-700 cursor-pointer mx-6" size={24} />
-          <Search className="absolute right-3 text-gray-700 cursor-pointer mx-3" size={24} />
+      <ToastContainer position="top-right" />
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center">
+          <div className="relative flex items-center w-full mr-4">
+            <input
+              type="text"
+              placeholder="Search patients..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="w-full pl-10 pr-20 py-2 border border-gray-700 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <SlidersHorizontal 
+              onClick={() => setShowFilters(!showFilters)}
+              className="absolute right-10 text-gray-700 cursor-pointer mx-6" 
+              size={24} 
+            />
+            <Search className="absolute right-3 text-gray-700 cursor-pointer mx-3" size={24} />
+          </div>
+
+          <button
+            onClick={handleAddPatient}
+            className="flex items-center bg-green-800 text-white px-4 py-2.5 rounded-full hover:bg-green-600 whitespace-nowrap"
+          >
+            <Plus className="mr-2" size={20} />
+            Add New Patient
+          </button>
         </div>
 
-        <button
-          onClick={handleAddPatient}
-          className="flex items-center bg-green-800 text-white px-4 py-2.5 rounded-full hover:bg-green-600 whitespace-nowrap"
-        >
-          <Plus className="mr-2" size={20} />
-          Add New Patient
-        </button>
+        {showFilters && (
+           <div className="p-4 max-w-4xl mx-auto">
+           <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+             <div className="p-4">
+               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+                   {/* Gender Filter */}
+                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                     <span className="text-sm font-medium text-gray-700">Gender:</span>
+                     <div className="flex gap-4">
+                       {['Male', 'Female'].map((gender) => (
+                         <label key={gender} className="flex items-center gap-2">
+                           <input
+                             type="checkbox"
+                             checked={selectedGenders.includes(gender)}
+                             onChange={() => handleGenderChange(gender)}
+                             className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                           />
+                           <span className="text-sm text-gray-600">{gender}</span>
+                         </label>
+                       ))}
+                     </div>
+                   </div>
+     
+                   {/* Vertical Divider - visible only on larger screens */}
+                   <div className="hidden lg:block h-8 w-px bg-gray-200" />
+     
+                   {/* Age Group Filter */}
+                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                     <span className="text-sm font-medium text-gray-700">Age Group:</span>
+                     <div className="flex flex-wrap gap-4">
+                       {ageGroups.map((age) => (
+                         <label key={age.id} className="flex items-center gap-2">
+                           <input
+                             type="checkbox"
+                             checked={selectedAgeGroups.includes(age.id)}
+                             onChange={() => handleAgeGroupChange(age.id)}
+                             className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                           />
+                           <span className="text-sm text-gray-600">{age.label}</span>
+                         </label>
+                       ))}
+                     </div>
+                   </div>
+                 </div>
+     
+                 {/* Apply Button */}
+                 <button
+                   onClick={handleApplyFilter}
+                   className="px-6 py-2 bg-green-600 text-white text-sm font-medium rounded-full cursor-pointer hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-green-500"
+                 >
+                   Apply Filters
+                 </button>
+               </div>
+             </div>
+           </div>
+         </div>
+        )}
       </div>
-
-      <div className="relative">
+      
+      <div className="relative mt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6 auto-rows-fr">
-          {filteredPatients.map((patient) => (
-            <div
-              key={patient.id}
-              onClick={() => handlePatientCardClick(patient)}
-              className="transform hover:-translate-y-1 transition-all duration-200"
-            >
-              <PatientCard patient={patient} />
+          {filteredPatients.length === 0 ? (
+            <div className="col-span-full text-center">
+              <p className="text-lg font-semibold">No patients added</p>
             </div>
-          ))}
+          ) : (
+            filteredPatients.map((patient) => (
+              <div
+                key={patient.id}
+                onClick={() => handlePatientCardClick(patient)}
+                className="transform hover:-translate-y-1 transition-all duration-200"
+              >
+                <PatientCard patient={patient} />
+              </div>
+            ))
+          )}
         </div>
 
         {filteredPatients.length === 0 || error && (

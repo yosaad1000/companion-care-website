@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Search } from "lucide-react";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -62,8 +62,8 @@ const MedicalDashboard = () => {
     isLoading || error
       ? []
       : data?.data?.patients?.filter((patient) =>
-          patient.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
   const handleSubmitEvent = () => {
     const formattedDate = date.toDateString();
@@ -168,7 +168,7 @@ const MedicalDashboard = () => {
         <div className="col-span-2 space-y-2 ">
           {/* Patient Visits */}
           <div className="bg-white rounded-2xl p-2 border border-gray-300 shadow-md">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-2">
               <div className="flex items-center gap-2">
                 <span className="text-gray-600 ml-4">👤</span>
                 <span className="font-semibold text-gray-800 text-lg">
@@ -185,18 +185,16 @@ const MedicalDashboard = () => {
                   </div>
                 </div>
               </div>
-              {/* <select className="px-4 py-1 rounded-md border text-gray-600">
-                <option>Monthly</option>
-              </select> */}
+
             </div>
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer width="100%" height={255}>
               <BarChart
-                data={visitData}
+                data={visitData.length > 0 ? visitData : [{ month: '', male: 0, female: 0 }]}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5} />
                 <XAxis dataKey="month" tick={{ fill: "#4A90E2" }} />
-                <YAxis tick={{ fill: "#4A90E2" }} />
+                <YAxis tick={{ fill: "#4A90E2" }} domain={[0, `${visitData.length > 0? 'dataMax':'dataMax+5'}`]} /> 
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#333",
@@ -227,17 +225,18 @@ const MedicalDashboard = () => {
                 </defs>
               </BarChart>
             </ResponsiveContainer>
+
           </div>
 
           {/* Todo & Calendar side-by-side */}
           <div className="grid grid-cols-2 gap-6 ">
             {/* Todo (Narrowed) */}
-            <div className="bg-white border border-gray-300 shadow-lg rounded-2xl p-6  overflow-y-auto max-h-[47vh] custom-scrollbar ">
+            <div className="bg-white border border-gray-300 shadow-lg rounded-2xl p-2 max-h-[48vh]  ">
               <TodoList />
             </div>
 
             {/* Calendar (Placed Beside Todo) */}
-            <div className="bg-white p-3 rounded-2xl border border-gray-300 shadow-md">
+            <div className="bg-white p-3 rounded-2xl border border-gray-300 shadow-md  max-h-[48vh]">
               <div className="flex justify-between items-center mb-1 ">
                 <h2 className="text-lg font-semibold">Event Calendar</h2>
                 {!selectedEvents.length && isEventMode && (
@@ -251,7 +250,7 @@ const MedicalDashboard = () => {
               </div>
 
               {/* Calendar directly below title and button */}
-              <div className="custom-calendar-container rounded-xl border border-gray-300 shadow-lg bg-white dark:bg-gray-900 p-4 max-h-[40vh] overflow-y-auto custom-scrollbar">
+              <div className="custom-calendar-container rounded-xl border border-gray-300 shadow-lg bg-white  max-h-[41vh] overflow-y-auto custom-scrollbar">
                 <Calendar
                   onClickDay={handleDateChange}
                   tileClassName={({ date, view }) => {
@@ -267,7 +266,7 @@ const MedicalDashboard = () => {
               {/* Modal for Event Details */}
               {showModal && (
                 <div className="fixed inset-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] z-10">
-                  <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                  <div className="bg-primary-400 p-6 rounded-lg shadow-lg w-96">
                     <h3 className="text-lg font-semibold mb-4">
                       {selectedEvents.length
                         ? "Event Details"
@@ -283,7 +282,7 @@ const MedicalDashboard = () => {
                             {selectedEvents.map((event, index) => (
                               <li
                                 key={index}
-                                className="flex justify-between items-center bg-gray-50 p-2 rounded"
+                                className="flex justify-between items-center bg-gray-50 p-2 rounded-md"
                               >
                                 <span className="font-semibold">
                                   • {event}
@@ -292,7 +291,7 @@ const MedicalDashboard = () => {
                                   className="ml-2 text-red-600 hover:text-red-800"
                                   onClick={() => handleDeleteEvent(event)}
                                 >
-                                  ✖
+                                  <X />
                                 </button>
                               </li>
                             ))}
@@ -307,7 +306,7 @@ const MedicalDashboard = () => {
                           </button>
                           <button
                             onClick={() => setShowModal(false)}
-                            className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+                            className="px-4 py-2 bg-gray-600 text-white rounded-md"
                           >
                             Close
                           </button>
@@ -320,12 +319,12 @@ const MedicalDashboard = () => {
                           value={newEvent}
                           onChange={(e) => setNewEvent(e.target.value)}
                           placeholder="Enter event description"
-                          className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                          className="w-full p-2 border bg-white border-gray-200 rounded-md mb-4"
                         />
                         <div className="flex justify-end">
                           <button
                             onClick={handleSubmitEvent}
-                            className="px-4 py-2 bg-purple-600 text-white rounded-md"
+                            className="px-4 py-2 bg-secondary text-white rounded-md"
                           >
                             Save
                           </button>
@@ -334,7 +333,7 @@ const MedicalDashboard = () => {
                               setShowModal(false);
                               setIsEventMode(false);
                             }}
-                            className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+                            className="ml-2 px-4 py-2 bg-gray-600 text-white rounded-md"
                           >
                             Cancel
                           </button>
@@ -350,23 +349,27 @@ const MedicalDashboard = () => {
 
         {/* Right Column (1/3) - Contacts */}
         <div className="bg-primary rounded-2xl p-3 overflow-y-auto max-h-[91vh] space-y-2 custom-scrollbar">
-          {filteredPatients.map((contact, idx) => (
-            <Link
-              to={`/chat/${contact.id}`}
-              key={idx}
-              className="flex bg-white border border-gray-300 shadow-md items-center gap-3 p-3 hover:bg-gray-100 rounded-xl"
-            >
-              <img
-                src={`/assets/Logo.png`}
-                alt={contact.name}
-                className="w-12 h-12 rounded-full"
-              />
-              <div>
-                <h3 className="font-semibold text-gray-800">{contact.name}</h3>
-                <p className="text-sm text-gray-500">{contact.email}</p>
-              </div>
-            </Link>
-          ))}
+          {filteredPatients.length === 0 ? (
+            <p className="text-center text-gray-500 ">No patients available</p>
+          ) : (
+            filteredPatients.map((contact, idx) => (
+              <Link
+                to={`/chat/${contact.id}`}
+                key={idx}
+                className="flex bg-white border border-gray-300 shadow-md items-center gap-3 p-3 hover:bg-gray-100 rounded-xl"
+              >
+                <img
+                  src={`/assets/Logo.png`}
+                  alt={contact.name}
+                  className="w-12 h-12 rounded-full"
+                />
+                <div>
+                  <h3 className="font-semibold text-gray-800">{contact.name}</h3>
+                  <p className="text-sm text-gray-500">{contact.email}</p>
+                </div>
+              </Link>
+            ))
+          )}
         </div>
       </div>
     </div>

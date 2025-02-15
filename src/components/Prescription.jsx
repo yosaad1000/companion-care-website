@@ -320,9 +320,10 @@ return (
         )})}
       </div>
     )}
+    
 
     <button
-      onClick={() => setShowForm(true)}
+      onClick={() =>{setShowForm(true)} }
       className="fixed bottom-6 right-6 w-14 h-14 bg-secondary text-white rounded-full shadow-lg hover:bg-secondary-200 flex items-center justify-center transition-colors z-20"
     >
       <Plus className="w-6 h-6" />
@@ -335,7 +336,7 @@ return (
             <div className="flex justify-between items-center ">
               <div className="text-2xl font-bold text-secondary">Add Medicine Details</div>
               <button
-                onClick={() => setShowForm(false)}
+                onClick={() => {setShowForm(false),resetForm()}}
                 className="text-gray-500 hover:text-gray-700"
               >
                 <X className="w-6 h-6" />

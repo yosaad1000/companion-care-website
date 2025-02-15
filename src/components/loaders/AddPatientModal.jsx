@@ -63,7 +63,7 @@ const AddPatientModal = ({ isOpen, onClose, toast }) => {
       className="fixed inset-0 bg-[rgba(0,0,0,0.6)] flex items-center justify-center z-50 "
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-md mx-4 relative animate-fadeIn ml-64 p-6">
+      <div className="bg-primary-400 rounded-lg shadow-2xl w-full max-w-md mx-4 relative animate-fadeIn ml-64 p-6">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -125,11 +125,11 @@ const AddPatientModal = ({ isOpen, onClose, toast }) => {
           <button
             type="submit"
             disabled={pairingCode.length !== 6}
-            className={`w-full py-2 rounded-lg font-medium transition duration-200 shadow-md 
+            className={`w-full py-2 secondary rounded-lg font-medium transition duration-200 shadow-md 
       ${
         pairingCode.length === 6
-          ? "bg-purple-600 hover:bg-purple-700 text-white"
-          : "bg-gray-400 cursor-not-allowed"
+          ? "bg-secondary hover:bg-purple-900 text-white"
+          : "bg-secondary cursor-not-allowed"
       }`}
           >
             Add Patient
