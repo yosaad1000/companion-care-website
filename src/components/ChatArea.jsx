@@ -151,7 +151,7 @@ function ChatArea({ selectedUser }) {
             />
             <div>
               <h2 className="font-medium">{selectedUser.name}</h2>
-              <p className="text-sm text-green-500">Online</p>
+              {/* <p className="text-sm text-green-500">Online</p> */}
             </div>
           </div>
           <svg

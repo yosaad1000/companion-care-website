@@ -74,7 +74,7 @@ const PatientCardContent = () => {
               placeholder="Search..."
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <SlidersHorizontal className="absolute right-10 text-gray-700 cursor-pointer mx-6" size={24} />
+            {/* <SlidersHorizontal className="absolute right-10 text-gray-700 cursor-pointer mx-6" size={24} /> */}
             <Search className="absolute right-3 text-gray-700 cursor-pointer mx-3" size={24} />
           </div>
           <Link to={`/chat/${id}`} className="flex items-center bg-green-800 text-white px-4 py-2 rounded-full hover:bg-green-600">

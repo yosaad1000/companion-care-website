@@ -11,10 +11,10 @@ import { useAuth } from "../hooks/useAuth";
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 const ageGroups = [
-  { id: 1, label: '0-18' ,value:[0,18] },
-  { id: 2, label: '19-40',value:[19,40] },
-  { id: 3, label: '41-60',value:[41,60] },
-  { id: 4, label: '60+' }
+  { id: 1, label: '0-18', value: [0, 18] },
+  { id: 2, label: '19-40', value: [19, 40] },
+  { id: 3, label: '41-60', value: [41, 60] },
+  { id: 4, label: '60+', value: [60, 150] }
 ];
 
 const Patients = () => {
@@ -23,6 +23,10 @@ const Patients = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [selectedAgeGroups, setSelectedAgeGroups] = useState([]);
+  const [appliedFilters, setAppliedFilters] = useState({
+    genders: [],
+    ageGroups: []
+  });
 
   const handleGenderChange = (gender) => {
     setSelectedGenders(prev => 
@@ -32,27 +36,26 @@ const Patients = () => {
     );
   };
 
-
   const handleAgeGroupChange = (ageGroup) => {
-    setSelectedAgeGroups(prev =>
-      prev.includes(ageGroup)
+    setSelectedAgeGroups(prev => {
+      const newGroups = prev.includes(ageGroup)
         ? prev.filter(a => a !== ageGroup)
-        : [...prev, ageGroup]
-    );
+        : [...prev, ageGroup];
+      return newGroups;
+    });
   };
 
-  const handleApplyFilter=()=>{
-     //filter logic can use value key to apply logic for filter
-
-    //  console.log(selectedAgeGroups,selectedGenders);
-
-    
-  }
+  const handleApplyFilter = () => {
+    setAppliedFilters({
+      genders: selectedGenders,
+      ageGroups: selectedAgeGroups
+    });
+  };
 
   const { user } = useAuth();
   const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_BACKEND_URL}/users/get-patients/${user.id}`, fetcher)
 
-  if (isLoading) return null
+  if (isLoading) return null;
 
   const navigate = useNavigate();
 
@@ -60,13 +63,62 @@ const Patients = () => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredPatients = data?.data?.patients?.filter((patient) =>
-    patient.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const calculateAge = (dob) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      age--;
+    }
+    return age;
+  };
+
+  const isInAgeGroup = (age) => {
+    
+    if (appliedFilters.ageGroups.length === 0) {
+      return true;
+    }
+    
+    return appliedFilters.ageGroups.some(groupId => {
+      const group = ageGroups.find(g => g.id === groupId);
+      
+      if (!group) {
+        return false;
+      }
+      
+      if (group.id === 4) {
+        const result = age >= 60;
+        return result;
+      }
+      
+      const result = age >= group.value[0] && age <= group.value[1];
+      return result;
+    });
+  };
+
+  const filteredPatients = data?.data?.patients
+    ? data.data.patients
+        .filter((patient) => {
+          
+          // Search filter
+          const searchMatch = patient.name.toLowerCase().includes(searchQuery.toLowerCase());
+          
+          // Gender filter
+          const genderMatch = appliedFilters.genders.length === 0 || 
+                            appliedFilters.genders.includes(patient.gender);
+          
+          // Age filter
+          const age = calculateAge(patient.dob);
+          const ageMatch = isInAgeGroup(age);
+  
+          return searchMatch && genderMatch && ageMatch;
+        })
+    : [];
 
   const handleAddPatient = () => {
     setIsModalOpen(true);
-    console.log("Add New Patient button clicked");
   };
 
   const handlePatientCardClick = (patient) => {

@@ -18,9 +18,13 @@ const ChatApp = ({}) => {
   const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_BACKEND_URL}/users/get-patients/${user?.id}`, fetcher);
 
   useEffect(() => {
-    if (data && patientId) {
-      const foundPatient = data.data.patients.find(patient => patient.id === patientId);
-      setSelectedUser(foundPatient);
+    if (data?.data?.patients?.length) {
+      if (patientId) {
+        const foundPatient = data.data.patients.find(patient => patient.id === patientId);
+        setSelectedUser(foundPatient || data.data.patients[0]);
+      } else {
+        setSelectedUser(data.data.patients[0]);
+      }
     }
   }, [data, patientId]);
 
@@ -79,9 +83,9 @@ const ChatApp = ({}) => {
                     alt={contact.name}
                     className="w-10 h-10 rounded-full"
                   />
-                  {contact.name && (
+                  {/* {contact.name && (
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                  )}
+                  )} */}
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center">

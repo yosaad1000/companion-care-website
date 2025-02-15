@@ -152,10 +152,10 @@ const MedicalDashboard = () => {
             onChange={handleSearch}
             disabled={isLoading || !data?.data?.patients?.length}
           />
-          <SlidersHorizontal
+          {/* <SlidersHorizontal
             className="absolute right-10 text-gray-700 cursor-pointer mx-6"
             size={24}
-          />
+          /> */}
           <Search
             className="absolute right-3 text-gray-700 cursor-pointer mx-3"
             size={24}
