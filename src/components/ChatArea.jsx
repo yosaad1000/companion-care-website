@@ -14,7 +14,7 @@ function ChatArea({ selectedUser }) {
   const [input, setInput] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isLoading,setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Request notification permission
@@ -118,7 +118,7 @@ function ChatArea({ selectedUser }) {
       reader.onloadend = () => {
         if (!ws || !authenticated) return;
         // console.log(reader.result);
-        
+
         const message = {
           type: "MESSAGE",
           roomId,
@@ -167,40 +167,44 @@ function ChatArea({ selectedUser }) {
       {/* Messages - using native scroll */}
       <div className="flex-1 overflow-y-auto p-4 rounded-2xl bg-gray-100 ml-4 mr-4 mt-4">
         <div className="space-y-4">
-          {isLoading &&  <div className="text-green-500">Loading...</div>}
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`flex ${
-                message.senderId === userId ? "justify-end" : "justify-start"
-              }`}
-            >
+          {isLoading &&
+            <div className="text-green-500 text-center items-center">Loading...</div>
+          }
+          {!isLoading && messages.length === 0 ? (
+            <div className="text-center text-gray-500">No chats with this user</div>
+          ) : (
+            messages.map((message, index) => (
               <div
-                className={`rounded-lg px-4 py-2 max-w-sm flex items-end space-x-2 ${
-                  message.senderId === userId
-                    ? "bg-secondary-200 text-white"
-                    : "bg-secondary text-white"
-                }`}
+                key={index}
+                className={`flex ${message.senderId === userId ? "justify-end" : "justify-start"
+                  }`}
               >
-                {message.messageType === "text" ? (
-                  <p className="break-words">{message.message}</p>
-                ) : (
-                  <img
-                    onClick={() => handleImageClick(message.message)}
-                    className="rounded-lg max-w-full max-h-40 object-cover cursor-pointer transition-transform hover:scale-101"
-                    src={message.message}
-                    alt={message.index}
-                  />
-                )}
-                <span className="text-xs opacity-75">
-                  {new Date(message.timestamp).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+                <div
+                  className={`rounded-lg px-4 py-2 max-w-sm flex items-end space-x-2 ${message.senderId === userId
+                      ? "bg-secondary-200 text-white"
+                      : "bg-secondary text-white"
+                    }`}
+                >
+                  {message.messageType === "text" ? (
+                    <p className="break-words">{message.message}</p>
+                  ) : (
+                    <img
+                      onClick={() => handleImageClick(message.message)}
+                      className="rounded-lg max-w-full max-h-40 object-cover cursor-pointer transition-transform hover:scale-101"
+                      src={message.message}
+                      alt={message.index}
+                    />
+                  )}
+                  <span className="text-xs opacity-75">
+                    {new Date(message.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
@@ -212,7 +216,7 @@ function ChatArea({ selectedUser }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-              <CircleX
+            <CircleX
               size={60}
               className="absolute top-4 right-4 text-white font-bold cursor-pointer rounded-full p-2 transition"
               onClick={() => setSelectedImage(null)} />
