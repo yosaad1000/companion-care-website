@@ -30,7 +30,7 @@ const getMealIcon = (index) => {
 };
 
 const PrescriptionView = ({ setShowPrescription, medicines, med }) => {
-  // console.log(med.split("\n"));
+  console.log(med.split("\n"));
   const text = med.split("\n");
   return (
     <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)] flex items-center justify-center p-4 z-50">

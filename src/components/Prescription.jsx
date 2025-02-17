@@ -218,6 +218,7 @@ const handleViewPrescription = (index) => {
 useEffect(()=>{
   getTimes();
 },[])
+console.log(texts);
 
 const getTimes = async()=>{
   try {
@@ -285,9 +286,9 @@ return (
         {texts.map((medicine, index) => {
           const text = medicine.split("\n")
         return (
-          <div key={index} className="mb-6 bg-white shadow-lg rounded-2xl p-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-secondary">Prescribed Medicine</h2>
+          <div key={index} className="mb-6 bg-white shadow-lg rounded-2xl p-4">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-md font-bold text-secondary">Prescribed Medicine</h2>
               <button
                 onClick={() => handleViewPrescription(index)}
                 className="flex items-center space-x-2 text-secondary hover:text-blue-700"

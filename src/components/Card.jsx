@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-const Card = ({ title, description, imageUrl, tags, setShowModel, handleDownloadReport}) => {
+const Card = ({ title, description, imageUrl, tags, setShowModel,setImages }) => {
 
   const handleDownload = () => {
     // Handle download logic here
@@ -8,6 +8,7 @@ const Card = ({ title, description, imageUrl, tags, setShowModel, handleDownload
 
   const handleNewDetection = () => {
     // Handle chat icon click (e.g., open chat UI)
+    setImages([]);
     setShowModel(false);
   }
 

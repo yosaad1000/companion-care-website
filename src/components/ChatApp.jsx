@@ -18,9 +18,13 @@ const ChatApp = ({}) => {
   const { data, error, isLoading } = useSWR(`${import.meta.env.VITE_BACKEND_URL}/users/get-patients/${user?.id}`, fetcher);
 
   useEffect(() => {
-    if (data && patientId) {
-      const foundPatient = data.data.patients.find(patient => patient.id === patientId);
-      setSelectedUser(foundPatient);
+    if (data?.data?.patients?.length) {
+      if (patientId) {
+        const foundPatient = data.data.patients.find(patient => patient.id === patientId);
+        setSelectedUser(foundPatient || data.data.patients[0]);
+      } else {
+        setSelectedUser(data.data.patients[0]);
+      }
     }
   }, [data, patientId]);
 
@@ -79,16 +83,10 @@ const ChatApp = ({}) => {
                     alt={contact.name}
                     className="w-10 h-10 rounded-full"
                   />
-                  {contact.name && (
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                  )}
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <h3 className="font-medium">{contact.name}</h3>
-                    {/* <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                    </svg> */}
                   </div>
                   <p className="text-sm text-gray-500 truncate">{contact.email}</p>
                 </div>
@@ -99,7 +97,17 @@ const ChatApp = ({}) => {
       </div>
 
       {/* Chat area */}
-      {selectedUser && <ChatArea selectedUser={selectedUser} />}
+      {selectedUser ? (
+        <ChatArea selectedUser={selectedUser} />
+      ) : (
+        <div className="flex-1 flex justify-center items-center">
+          <img
+            src="/assets/Logo.png"
+            alt="Logo"
+            className="w-80 h-80 opacity-50"
+          />
+        </div>
+      )}
     </div>
   );
 };

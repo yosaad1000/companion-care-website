@@ -18,7 +18,7 @@ const Documents = () => {
   const handleAddDocument = (e) => {
     e.preventDefault();
     if (!newTreatment || !newFile) return;
-
+    console.log(newFile);
     const now = new Date();
     const formattedDate = now.toLocaleString('en-GB', {
       day: '2-digit',
@@ -50,6 +50,7 @@ const Documents = () => {
   };
 
   const handleViewFile = (fileUrl) => {
+    // console.log(fileUrl)
     if (!fileUrl) return alert('No file available to view');
     window.open(fileUrl, '_blank');
   };
@@ -108,7 +109,7 @@ const Documents = () => {
       </div>
 
       {showUploadForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)] flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-gray-800">Upload Document</h3>
@@ -152,7 +153,7 @@ const Documents = () => {
                 <button
                   type="button"
                   onClick={() => setShowUploadForm(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-4 bg-gray-200 py-2 border border-gray-300 rounded-lg hover:bg-gray-400 hover:text-white transition-colors"
                 >
                   Cancel
                 </button>
