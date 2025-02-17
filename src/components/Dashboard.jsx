@@ -350,7 +350,16 @@ const MedicalDashboard = () => {
         {/* Right Column (1/3) - Contacts */}
         <div className="bg-primary rounded-2xl p-3 overflow-y-auto max-h-[91vh] space-y-2 custom-scrollbar">
           {filteredPatients.length === 0 ? (
-            <p className="text-center text-gray-500 ">No patients available</p>
+            <div className="mt-30">
+            <p className="text-center text-gray-500 mb-10">No patients available</p>
+            <div className="flex-1 flex justify-center items-center">
+                <img
+                  src="/assets/Logo.png"
+                  alt="Logo"
+                  className="w-80 h-80 opacity-50"
+                />
+              </div>
+              </div>
           ) : (
             filteredPatients.map((contact, idx) => (
               <Link

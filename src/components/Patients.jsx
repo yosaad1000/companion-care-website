@@ -29,7 +29,7 @@ const Patients = () => {
   });
 
   const handleGenderChange = (gender) => {
-    setSelectedGenders(prev => 
+    setSelectedGenders(prev =>
       prev.includes(gender)
         ? prev.filter(g => g !== gender)
         : [...prev, gender]
@@ -76,23 +76,23 @@ const Patients = () => {
   };
 
   const isInAgeGroup = (age) => {
-    
+
     if (appliedFilters.ageGroups.length === 0) {
       return true;
     }
-    
+
     return appliedFilters.ageGroups.some(groupId => {
       const group = ageGroups.find(g => g.id === groupId);
-      
+
       if (!group) {
         return false;
       }
-      
+
       if (group.id === 4) {
         const result = age >= 60;
         return result;
       }
-      
+
       const result = age >= group.value[0] && age <= group.value[1];
       return result;
     });
@@ -100,21 +100,21 @@ const Patients = () => {
 
   const filteredPatients = data?.data?.patients
     ? data.data.patients
-        .filter((patient) => {
-          
-          // Search filter
-          const searchMatch = patient.name.toLowerCase().includes(searchQuery.toLowerCase());
-          
-          // Gender filter
-          const genderMatch = appliedFilters.genders.length === 0 || 
-                            appliedFilters.genders.includes(patient.gender);
-          
-          // Age filter
-          const age = calculateAge(patient.dob);
-          const ageMatch = isInAgeGroup(age);
-  
-          return searchMatch && genderMatch && ageMatch;
-        })
+      .filter((patient) => {
+
+        // Search filter
+        const searchMatch = patient.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+        // Gender filter
+        const genderMatch = appliedFilters.genders.length === 0 ||
+          appliedFilters.genders.includes(patient.gender);
+
+        // Age filter
+        const age = calculateAge(patient.dob);
+        const ageMatch = isInAgeGroup(age);
+
+        return searchMatch && genderMatch && ageMatch;
+      })
     : [];
 
   const handleAddPatient = () => {
@@ -138,10 +138,10 @@ const Patients = () => {
               onChange={handleSearch}
               className="w-full pl-10 pr-20 py-2 border border-gray-700 rounded-3xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <SlidersHorizontal 
+            <SlidersHorizontal
               onClick={() => setShowFilters(!showFilters)}
-              className="absolute right-10 text-gray-700 cursor-pointer mx-6" 
-              size={24} 
+              className="absolute right-10 text-gray-700 cursor-pointer mx-6"
+              size={24}
             />
             <Search className="absolute right-3 text-gray-700 cursor-pointer mx-3" size={24} />
           </div>
@@ -156,71 +156,79 @@ const Patients = () => {
         </div>
 
         {showFilters && (
-           <div className="p-4 max-w-4xl mx-auto">
-           <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-             <div className="p-4">
-               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-                   {/* Gender Filter */}
-                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                     <span className="text-sm font-medium text-gray-700">Gender:</span>
-                     <div className="flex gap-4">
-                       {['Male', 'Female'].map((gender) => (
-                         <label key={gender} className="flex items-center gap-2">
-                           <input
-                             type="checkbox"
-                             checked={selectedGenders.includes(gender)}
-                             onChange={() => handleGenderChange(gender)}
-                             className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
-                           />
-                           <span className="text-sm text-gray-600">{gender}</span>
-                         </label>
-                       ))}
-                     </div>
-                   </div>
-     
-                   {/* Vertical Divider - visible only on larger screens */}
-                   <div className="hidden lg:block h-8 w-px bg-gray-200" />
-     
-                   {/* Age Group Filter */}
-                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                     <span className="text-sm font-medium text-gray-700">Age Group:</span>
-                     <div className="flex flex-wrap gap-4">
-                       {ageGroups.map((age) => (
-                         <label key={age.id} className="flex items-center gap-2">
-                           <input
-                             type="checkbox"
-                             checked={selectedAgeGroups.includes(age.id)}
-                             onChange={() => handleAgeGroupChange(age.id)}
-                             className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
-                           />
-                           <span className="text-sm text-gray-600">{age.label}</span>
-                         </label>
-                       ))}
-                     </div>
-                   </div>
-                 </div>
-     
-                 {/* Apply Button */}
-                 <button
-                   onClick={handleApplyFilter}
-                   className="px-6 py-2 bg-green-600 text-white text-sm font-medium rounded-full cursor-pointer hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-green-500"
-                 >
-                   Apply Filters
-                 </button>
-               </div>
-             </div>
-           </div>
-         </div>
+          <div className="p-4 max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+              <div className="p-4">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+                    {/* Gender Filter */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <span className="text-sm font-medium text-gray-700">Gender:</span>
+                      <div className="flex gap-4">
+                        {['Male', 'Female'].map((gender) => (
+                          <label key={gender} className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={selectedGenders.includes(gender)}
+                              onChange={() => handleGenderChange(gender)}
+                              className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                            />
+                            <span className="text-sm text-gray-600">{gender}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Vertical Divider - visible only on larger screens */}
+                    <div className="hidden lg:block h-8 w-px bg-gray-200" />
+
+                    {/* Age Group Filter */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <span className="text-sm font-medium text-gray-700">Age Group:</span>
+                      <div className="flex flex-wrap gap-4">
+                        {ageGroups.map((age) => (
+                          <label key={age.id} className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={selectedAgeGroups.includes(age.id)}
+                              onChange={() => handleAgeGroupChange(age.id)}
+                              className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                            />
+                            <span className="text-sm text-gray-600">{age.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Apply Button */}
+                  <button
+                    onClick={handleApplyFilter}
+                    className="px-6 py-2 bg-green-600 text-white text-sm font-medium rounded-full cursor-pointer hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-green-500"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
-      
+
       <div className="relative mt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6 auto-rows-fr">
           {filteredPatients.length === 0 ? (
-            <div className="col-span-full text-center">
-              <p className="text-lg font-semibold">No patients added</p>
+            <div className="col-span-full text-center mt-10">
+              <p className="text-lg font-semibold mb-25">No patients added</p>
+              <div className="flex-1 flex justify-center items-center">
+                <img
+                  src="/assets/Logo.png"
+                  alt="Logo"
+                  className="w-80 h-80 opacity-50"
+                />
+              </div>
             </div>
+
           ) : (
             filteredPatients.map((patient) => (
               <div
