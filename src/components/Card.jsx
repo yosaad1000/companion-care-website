@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-const Card = ({ title, description, imageUrl, tags, setShowModel, }) => {
+const Card = ({ title, description, imageUrl, tags, setShowModel, handleDownloadReport}) => {
 
   const handleDownload = () => {
     // Handle download logic here
@@ -36,7 +36,7 @@ const Card = ({ title, description, imageUrl, tags, setShowModel, }) => {
             <div className="flex justify-center">
               <button
                 className="bg-secondary w-40 text-white px-2 py-2 rounded-full flex items-center justify-center space-x-2"
-                onClick={handleDownload}
+                onClick={handleDownloadReport}
               >
                 <span>Report</span>
                 <svg

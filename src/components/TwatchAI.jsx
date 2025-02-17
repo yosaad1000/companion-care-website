@@ -4,6 +4,7 @@ import Logoloader from './loaders/Logoloader';
 import Card from './Card';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import generateMedicalReport from '../report/generateMedicalReport ';
 
 const TwatchAI = () => {
     const [dragActive, setDragActive] = useState(false);
@@ -26,6 +27,35 @@ const TwatchAI = () => {
         imageUrl: "https://picsum.photos/800",
         tags: ["Auto Immune", "Carcinogenic"],
     })
+
+    const handleDownloadReport = () => {
+        generateMedicalReport({
+          patientName: "John Doe",
+          patientId: "123456",
+          dob: "01/15/1980",
+          gender: "Male",
+          doctorName: "Dr. Emily Carter",
+          prediction: "Melanoma",
+          confidence: 0.9091,
+          category: "Carcinogenic",
+          severity: "Severe",
+          symptoms: [
+            "New or changing moles",
+            "Irregular borders, multiple colors, diameter over 6mm",
+            "Itching, bleeding, or crusting of a mole",
+          ],
+          causes: [
+            { type: "Environmental", details: "Excessive UV radiation exposure" },
+            { type: "Genetic", details: "Family history of melanoma increases risk" },
+            { type: "Lifestyle", details: "Use of tanning beds, history of sunburns" },
+          ],
+          treatments: [
+            { type: "Medical", details: "Surgical excision, Immunotherapy" },
+            { type: "Home Care", details: "Regular self-examinations, sunscreen" },
+          ],
+          base64Image: "cVxWFcZEVFW73S6KQhmjlDLGRDyO4qSWEmMCCBCCo6xxnPPpzhQhIJgqpVpZmj0NY7yxvmmMnk6nlJKYR9romPNWltVSzmYFQhhhzBjPi5xQFjAmpTTWWes8AMYYYfAe",
+        });
+      };
 
     const handleDrag = (e) => {
         e.preventDefault();
@@ -91,10 +121,13 @@ const TwatchAI = () => {
 
     const handleImageUpload = async() => {
         // backend request logic
+
+
+        
           
         setLoading(true);
 
-        await setTimeout(()=>{
+        setTimeout(()=>{
             setShowModel(true);
             setLoading(false);
         },2000);
@@ -188,6 +221,7 @@ const TwatchAI = () => {
                           imageUrl={diseaseDetails.imageUrl}
                           tags={diseaseDetails.tags}
                           setShowModel={setShowModel} 
+                          handleDownloadReport={handleDownloadReport}
                     />
                 )}
 
