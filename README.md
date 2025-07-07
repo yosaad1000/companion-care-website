@@ -10,3 +10,7 @@ Currently, two official plugins are available:
 ## Demo
 
 [demo.mp4](demo.mp4)
+
+## Tutorial
+
+![Tutorial GIF](demo-ezgif.com-video-to-gif-converter.gif)
